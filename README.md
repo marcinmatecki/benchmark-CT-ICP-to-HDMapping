@@ -22,7 +22,7 @@ docker build -t ct-icp_noetic .
 cd ~/hdmapping-benchmark/benchmark-CT-ICP-to-HDMapping
 chmod +x docker_session_run-ros1-ct-icp.sh 
 cd ~/hdmapping-benchmark/data
-~/hdmapping-benchmark/benchmark-CT-ICP-to-HDMapping/docker_session_run-ros1-CT-ICP.sh reg-1.bag-pc.bag .
+~/hdmapping-benchmark/benchmark-CT-ICP-to-HDMapping/docker_session_run-ros1-ct-icp.sh reg-1.bag-pc.bag .
 ```
 
 ## Step 4 (Open and visualize data)
