@@ -96,10 +96,13 @@ tmux wait-for BAG_DONE
 echo "[control] stop record"
 tmux send-keys -t '"$TMUX_SESSION"'.1 C-c
 
-sleep 5
+sleep 3
+pkill -INT -f "rosbag record"
+
+sleep 7
 rosnode kill -a
 
-sleep 12
+sleep 10
 pkill -f ros || true
 '\''
 
