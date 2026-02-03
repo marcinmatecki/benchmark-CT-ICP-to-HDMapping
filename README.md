@@ -1,4 +1,8 @@
-# CT-ICP converter
+# [CT-ICP](https://github.com/jedeschaud/ct_icp/) converter to [HDMapping](https://github.com/MapsHD/HDMapping)
+
+## Hint
+
+Please change branch to [Bunker-DVI-Dataset-reg-1](https://github.com/MapsHD/benchmark-CT-ICP-to-HDMapping/tree/Bunker-DVI-Dataset-reg-1) for quick experiment.  
 
 ## Example Dataset: 
 
