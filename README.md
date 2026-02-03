@@ -1,109 +1,81 @@
-# CT-ICP converter
+# CT-ICP to HDMapping simlified instruction
 
-## Example Dataset: 
+## Step 1 (prepare data)
+Download the dataset `reg-1.bag` by clicking [link](https://cloud.cylab.be/public.php/dav/files/7PgyjbM2CBcakN5/reg-1.bag) (it is part of [Bunker DVI Dataset](https://charleshamesse.github.io/bunker-dvi-dataset)) and convert with [tool](https://github.com/MapsHD/livox_bag_aggregate) to 'reg-1.bag-pc.bag'.
 
-Download the dataset from [Bunker DVI Dataset](https://charleshamesse.github.io/bunker-dvi-dataset/)  
+File 'reg-1.bag-pc.bag' is an input for further calculations.
+It should be located in '~/hdmapping-benchmark/data'.
 
-## Dependecies
+
+## Step 2 (prepare docker)
 ```shell
-sudo apt install nlohmann-json3-dev
-sudo apt install libssl-dev
+mkdir -p ~/hdmapping-benchmark
+cd ~/hdmapping-benchmark
+git clone https://github.com/MapsHD/benchmark-CT-ICP-to-HDMapping --recursive
+cd benchmark-CT-ICP-to-HDMapping
+git checkout Bunker-DVI-Dataset-reg-1
+docker build -t ct-icp_noetic .
 ```
-## For build
+
+## Step 3 (run docker, file 'reg-1.bag-pc.bag' should be in '~/hdmapping-benchmark/data')
 ```shell
-wget https://cmake.org/files/v3.20/cmake-3.20.5.tar.gz
-tar -zxvf cmake-3.20.5.tar.gz
-cd cmake-3.20.5
-./bootstrap
-make
-sudo make install
+cd ~/hdmapping-benchmark/benchmark-CT-ICP-to-HDMapping
+chmod +x docker_session_run-ros1-ct-icp.sh 
+cd ~/hdmapping-benchmark/data
+~/hdmapping-benchmark/benchmark-CT-ICP-to-HDMapping/docker_session_run-ros1-CT-ICP.sh reg-1.bag-pc.bag .
 ```
 
-## Intended use 
+## Step 4 (Open and visualize data)
+Expected data should appear in ~/hdmapping-benchmark/data/output_hdmapping-ct-icp
+Use tool [multi_view_tls_registration_step_2](https://github.com/MapsHD/HDMapping) to open session.json from ~/hdmapping-benchmark/data/output_hdmapping-CT-ICP.
 
-This small toolset allows to integrate SLAM solution provided by [ct-icp](https://github.com/jedeschaud/ct_icp/) with [HDMapping](https://github.com/MapsHD/HDMapping).
-This repository contains ROS 1 workspace that :
-  - submodule to tested revision of CT ICP
-  - a converter that listens to topics advertised from odometry node and save data in format compatible with HDMapping.
+You should see following data
 
-## Building
+lio_initial_poses.reg
 
-```shell
-mkdir -p /test_ws/src
-cd /test_ws/src
-git clone https://github.com/marcinmatecki/ct-icp-to-hdmapping.git --recursive
+poses.reg
 
-cd ct-icp-to-hdmapping/src/ct_icp
-mkdir .cmake-build-superbuild
-cd .cmake-build-superbuild
-cmake ../superbuild
-cmake --build . --config Release
+scan_lio_0.laz
 
-cd ..
-mkdir cmake-build-release 
-cd  cmake-build-release
-cmake .. -DCMAKE_BUILD_TYPE=Release
-cmake --build . --target install --config Release --parallel 12
+scan_lio_1.laz
 
-cd ..
-cd ros/roscore
-mkdir cmake-build-release && cd  cmake-build-release
-cmake .. -DCMAKE_BUILD_TYPE=Release
-cmake --build . --target install --config Release --parallel 12
+scan_lio_2.laz
 
-cd /test_ws/
-catkin_make -DSUPERBUILD_INSTALL_DIR=<path-to-superbuild-install-dir>
-```
+scan_lio_3.laz
 
-## Usage - data SLAM:
+scan_lio_4.laz
 
-Prepare recorded bag with estimated odometry:
+scan_lio_5.laz
 
-In first terminal record bag:
-```shell
-rosbag record /ct_icp/world_points /ct_icp/pose/odom
-```
+scan_lio_6.laz
 
-and start odometry:
-```shell 
-cd /test_ws/
-source ./devel/setup.sh # adjust to used shell
-roslaunch ct_icp_odometry urban_loco_CAL.launch rosbag:=<path_to_rosbag>
-```
+scan_lio_7.laz
 
-## Usage - conversion:
+scan_lio_8.laz
 
-```shell
-cd /test_ws/ct_icp/
-source ./devel/setup.sh # adjust to used shell
-rosrun ct-icp-to-hdmapping listener <recorded_bag> <output_dir>
-```
+scan_lio_9.laz
 
-## Record the bag file:
+session.json
 
-```shell
-rosbag record /ct_icp/world_points /ct_icp/pose/odom -o {your_directory_for_the_recorded_bag}
-```
+trajectory_lio_0.csv
 
-## CT-ICP Launch:
+trajectory_lio_1.csv
 
-```shell
-cd /test_ws/
-source ./devel/setup.sh # adjust to used shell
-roslaunch ct_icp_odometry urban_loco_CAL.launch rosbag:=<path_to_rosbag>
-```
+trajectory_lio_2.csv
 
-## During the record (if you want to stop recording earlier) / after finishing the bag:
+trajectory_lio_3.csv
 
-```shell
-In the terminal where the ros record is, interrupt the recording by CTRL+C
-Do it also in ros launch terminal by CTRL+C.
-```
+trajectory_lio_4.csv
 
-## Usage - Conversion (ROS bag to HDMapping, after recording stops):
+trajectory_lio_5.csv
 
-```shell
-cd /test_ws/
-source ./devel/setup.sh # adjust to used shell
-rosrun ct-icp-to-hdmapping listener <recorded_bag> <output_dir>
-```
+trajectory_lio_6.csv
+
+trajectory_lio_7.csv
+
+trajectory_lio_8.csv
+
+trajectory_lio_9.csv
+
+## Contact email
+januszbedkowski@gmail.com
