@@ -90,9 +90,14 @@ make -j$(nproc) && \
 make install
 
 WORKDIR /ros_ws
+
 RUN source /opt/ros/noetic/setup.bash && \
-    catkin_make \
-     -DSUPERBUILD_INSTALL_DIR=/ros_ws/src/ct_icp/install
+    catkin_make --only-pkg-with-deps slam_roscore -DSUPERBUILD_INSTALL_DIR=/ros_ws/src/ct_icp/install
+
+RUN source /opt/ros/noetic/setup.bash && \
+    catkin_make --only-pkg-with-deps ct_icp_odometry -DSUPERBUILD_INSTALL_DIR=/ros_ws/src/ct_icp/install && \
+    catkin_make --pkg ct_icp_odometry -DSUPERBUILD_INSTALL_DIR=/ros_ws/src/ct_icp/install && \
+    catkin_make --only-pkg-with-deps ct-icp-to-hdmapping
      
 RUN sed -i 's|<arg name="topic" value="/rslidar_points"/>|<arg name="topic" value="/livox/pointcloud"/>|g' \
     /ros_ws/src/ct_icp/ros/catkin_ws/ct_icp_odometry/launch/urban_loco/urban_loco_CAL.launch
